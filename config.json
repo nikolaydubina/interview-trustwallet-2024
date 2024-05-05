@@ -1,0 +1,7 @@
+{
+    "serve_address": ":8080",
+    "ethereum_api_base_url": "https://cloudflare-eth.com",
+    "refresh_worker": {
+        "pool_interval_sec": 10
+    }
+}
