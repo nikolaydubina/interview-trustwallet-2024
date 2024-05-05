@@ -2,7 +2,6 @@ package ethparser
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -68,11 +67,12 @@ func (s RefreshWorker) processBlock(ctx context.Context, blockNumber ethclient.Q
 		return fmt.Errorf("cannot get block by number: %w", err)
 	}
 	for _, tx := range block.Transactions {
-		if err := errors.Join(
-			s.repo.AddTransactionForAddress(ctx, tx.From, tx),
-			s.repo.AddTransactionForAddress(ctx, tx.To, tx),
-		); err != nil {
-			return fmt.Errorf("cannot persist transactions: %w", err)
+		for _, addr := range [2]ethclient.Address{tx.From, tx.To} {
+			if ok, err := s.repo.GetAddressSubscription(ctx, addr); ok && err == nil {
+				if err := s.repo.AddTransactionForAddress(ctx, addr, tx); err != nil {
+					return fmt.Errorf("cannot persist transaction for addr(%v): %w", addr, err)
+				}
+			}
 		}
 	}
 	slog.InfoContext(ctx, "processed block", "block_number", blockNumber.String(), "num_transactions", len(block.Transactions))

@@ -26,28 +26,17 @@ func NewInMemoryTransactionRepository() *InMemoryTransactionRepository {
 	}
 }
 
-func (s *InMemoryTransactionRepository) EnableAddressSubscription(ctx context.Context, address ethclient.Address) error {
+func (s *InMemoryTransactionRepository) SetAddressSubscription(ctx context.Context, address ethclient.Address, val bool) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
-	s.addressSubscription[address.String()] = true
+	s.addressSubscription[address.String()] = val
 	return nil
 }
 
-func (s *InMemoryTransactionRepository) GetSubscribedAddresses(ctx context.Context) ([]ethclient.Address, error) {
+func (s *InMemoryTransactionRepository) GetAddressSubscription(ctx context.Context, address ethclient.Address) (bool, error) {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
-	var vs []ethclient.Address
-	for k, v := range s.addressSubscription {
-		if !v {
-			continue
-		}
-		addr, err := ethclient.NewAddressFromString(k)
-		if err != nil {
-			return nil, err
-		}
-		vs = append(vs, addr)
-	}
-	return vs, nil
+	return s.addressSubscription[address.String()], nil
 }
 
 func (s *InMemoryTransactionRepository) GetCurrentBlockNumber(ctx context.Context) (ethclient.Quantity, error) {
@@ -66,9 +55,6 @@ func (s *InMemoryTransactionRepository) SetCurrentBlockNumber(ctx context.Contex
 func (s *InMemoryTransactionRepository) AddTransactionForAddress(ctx context.Context, address ethclient.Address, transaction ethclient.Transaction) error {
 	s.mtx.Lock()
 	defer s.mtx.Unlock()
-	if !s.addressSubscription[address.String()] {
-		return nil
-	}
 	slog.InfoContext(ctx, "adding transaction", "address", address.String(), "transaction", transaction)
 	s.transactions[address.String()] = append(s.transactions[address.String()], transaction)
 	return nil

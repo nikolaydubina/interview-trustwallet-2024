@@ -86,16 +86,29 @@ build and start http server and worker and in-memory db (all one process).
 run in root folder, or else provide path to config file via env variable.
 ```bash
 $ TRUSTWALLET_FETCHER_CONFIG=$PWD/config.json go run cmd/server-fetcher/server-fetcher.go 
-{"time":"2024-05-05T15:28:37.442559+08:00","level":"INFO","msg":"starting refresh worker"}
-{"time":"2024-05-05T15:28:37.442664+08:00","level":"INFO","msg":"start http server"}
-{"time":"2024-05-05T15:28:47.758005+08:00","level":"INFO","msg":"previous block is zero, setting current block","block_number":"0x12e2920"}
-{"time":"2024-05-05T15:28:57.796712+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e2920","to_block":"0x12e2921"}
-{"time":"2024-05-05T15:28:59.050138+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e2921"}
-{"time":"2024-05-05T15:29:07.710122+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e2921","to_block":"0x12e2922"}
-{"time":"2024-05-05T15:29:08.193103+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e2922"}
-{"time":"2024-05-05T15:29:17.678132+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e2922","to_block":"0x12e2923"}
-{"time":"2024-05-05T15:29:18.313776+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e2923"}
-...
+{"time":"2024-05-05T15:56:07.116309+08:00","level":"INFO","msg":"starting refresh worker"}
+{"time":"2024-05-05T15:56:07.116478+08:00","level":"INFO","msg":"start http server"}
+{"time":"2024-05-05T15:56:17.518031+08:00","level":"INFO","msg":"previous block is zero, setting current block","block_number":"0x12e29aa"}
+{"time":"2024-05-05T15:56:27.450348+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e29aa","to_block":"0x12e29ab"}
+{"time":"2024-05-05T15:56:28.071358+08:00","level":"INFO","msg":"processed block","block_number":"0x12e29ab","num_transactions":141}
+{"time":"2024-05-05T15:56:28.071418+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e29ab"}
+{"time":"2024-05-05T15:56:37.352099+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e29ab","to_block":"0x12e29ac"}
+{"time":"2024-05-05T15:56:38.315916+08:00","level":"INFO","msg":"processed block","block_number":"0x12e29ac","num_transactions":167}
+{"time":"2024-05-05T15:56:38.315964+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e29ac"}
+{"time":"2024-05-05T15:56:47.421984+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":0,"from_block":"0x12e29ac","to_block":"0x12e29ac"}
+{"time":"2024-05-05T15:56:53.775256+08:00","level":"INFO","msg":"get transaction","address":"0x4675c7e5baafbffbca748158becba61ef3b0a263"}
+{"time":"2024-05-05T15:56:57.39537+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e29ac","to_block":"0x12e29ad"}
+{"time":"2024-05-05T15:56:58.37303+08:00","level":"INFO","msg":"processed block","block_number":"0x12e29ad","num_transactions":144}
+{"time":"2024-05-05T15:56:58.373087+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e29ad"}
+{"time":"2024-05-05T15:57:00.464607+08:00","level":"INFO","msg":"get transaction","address":"0x4675c7e5baafbffbca748158becba61ef3b0a263"}
+{"time":"2024-05-05T15:57:07.385928+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e29ad","to_block":"0x12e29ae"}
+{"time":"2024-05-05T15:57:08.417306+08:00","level":"INFO","msg":"adding transaction","address":"0x4675c7e5baafbffbca748158becba61ef3b0a263","transaction":{"from":"0x1f9090aae28b8a3dceadf281b0f12828e676c326","to":"0x4675c7e5baafbffbca748158becba61ef3b0a263","value":"0x3960123222d9c5"}}
+{"time":"2024-05-05T15:57:08.417434+08:00","level":"INFO","msg":"processed block","block_number":"0x12e29ae","num_transactions":172}
+{"time":"2024-05-05T15:57:08.417445+08:00","level":"INFO","msg":"processed block ok","block_number":"0x12e29ae"}
+{"time":"2024-05-05T15:57:12.326838+08:00","level":"INFO","msg":"get transaction","address":"0x4675c7e5baafbffbca748158becba61ef3b0a263"}
+{"time":"2024-05-05T15:57:17.366714+08:00","level":"INFO","msg":"processing new blocks","num_blocks_to_process":1,"from_block":"0x12e29ae","to_block":"0x12e29af"}
+{"time":"2024-05-05T15:57:19.38496+08:00","level":"INFO","msg":"processed block","block_number":"0x12e29af","num_transactions":170}
+{"time":"202
 ```
 
 check current block
@@ -106,10 +119,30 @@ $ curl -X GET 'http://127.0.0.1:8080/api/v1/current-block'
 
 subscribe
 ```bash
-$ curl -X POST 'http://127.0.0.1:8080/api/v1/0x82c917933a7b730ce50a13f753aef81a8ff9d7a8/subscribe'
+$ curl -X POST 'http://127.0.0.1:8080/api/v1/0x4675c7e5baafbffbca748158becba61ef3b0a263/subscribe'
 ```
 
 transactions
 ```bash
-$ curl -X POST 'http://127.0.0.1:8080/api/v1/0x82c917933a7b730ce50a13f753aef81a8ff9d7a8/transactions'
+$ curl -X GET 'http://127.0.0.1:8080/api/v1/0x4675c7e5baafbffbca748158becba61ef3b0a263/transactions'
+[{"from":"0x1f9090aae28b8a3dceadf281b0f12828e676c326","to":"0x4675c7e5baafbffbca748158becba61ef3b0a263","value":"0x3960123222d9c5"}]
 ```
+
+How to get active addresses that likely to have transactions? (without spending money)
+
+1. get curl latest block `curl -X POST 'https://cloudflare-eth.com' --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":83}'`
+2. get some address that has "to" destination in transactions, those addresses likely to make another transaction. `curl -X POST 'https://cloudflare-eth.com' --data '{"jsonrpc":"2.0","method":"eth_getBlockByNumber","params":["0x12e29a9", true],"id":1}' | jq`
+
+Other improvements:
+* tests. if I had time I would add mock-based tests for classes, for parsing/writing full example responses, but I don't have time! (4h limit and I am moving house! and my laptop is dying)
+* OTEL telemetry (extending upon tags I used in slog, but little better)
+* CHI HTTP router
+* YAML config
+* proper database (maybe redis, or maybe async drive architecture to send events from long-polling worker into whoever subscribed through queues AWS SNS+SQS style)
+* standard JSON RPC 3rd party lib
+* Docker container
+* K8S Service and K8S Jobs charts
+* separate binary for worker and server
+* middleware for HTTP server
+* fuzz tests for QUANTITY in ethereum code
+* and many more!

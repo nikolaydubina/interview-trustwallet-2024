@@ -8,8 +8,8 @@ import (
 )
 
 type TransactionRepository interface {
-	EnableAddressSubscription(ctx context.Context, address ethclient.Address) error
-	GetSubscribedAddresses(ctx context.Context) ([]ethclient.Address, error)
+	SetAddressSubscription(ctx context.Context, address ethclient.Address, val bool) error
+	GetAddressSubscription(ctx context.Context, address ethclient.Address) (bool, error)
 	GetCurrentBlockNumber(ctx context.Context) (ethclient.Quantity, error)
 	SetCurrentBlockNumber(ctx context.Context, blockNumber ethclient.Quantity) error
 	AddTransactionForAddress(ctx context.Context, address ethclient.Address, transaction ethclient.Transaction) error
@@ -39,7 +39,7 @@ func (s Parser) Subscribe(ctx context.Context, address string) error {
 	if err != nil {
 		return fmt.Errorf("invalid address: %w", err)
 	}
-	return s.repository.EnableAddressSubscription(ctx, addr)
+	return s.repository.SetAddressSubscription(ctx, addr, true)
 }
 
 // GetTransactions lists of inbound or outbound transactions for an address.
